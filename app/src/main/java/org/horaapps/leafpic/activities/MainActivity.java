@@ -80,6 +80,8 @@ public class MainActivity extends SharedMediaActivity implements
     public static final String ARGS_PICK_MODE = "pick_mode";
 
     private static final String SAVE_FRAGMENT_MODE = "fragment_mode";
+    private static final String SELECTED_ITEM = "SELECTED_ITEM";
+    private int selectedNavItem = NAVIGATION_ITEM_ALL_ALBUMS;
 
     public @interface FragmentMode {
         int MODE_ALBUMS = 1001;
@@ -154,11 +156,13 @@ public class MainActivity extends SharedMediaActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVE_FRAGMENT_MODE, fragmentMode);
+        outState.putInt(SELECTED_ITEM, selectedNavItem);
         super.onSaveInstanceState(outState);
     }
 
     private void restoreState(@NonNull Bundle savedInstance) {
         fragmentMode = savedInstance.getInt(SAVE_FRAGMENT_MODE, FragmentMode.MODE_ALBUMS);
+        selectedNavItem = savedInstance.getInt(SELECTED_ITEM, NAVIGATION_ITEM_ALL_ALBUMS);
     }
 
     private void displayAlbums(boolean hidden) {
@@ -276,7 +280,7 @@ public class MainActivity extends SharedMediaActivity implements
         unlockNavigationDrawer();
         getSupportFragmentManager().popBackStack();
         albumsFragment = (AlbumsFragment) getSupportFragmentManager().findFragmentByTag(AlbumsFragment.TAG);
-        selectNavigationItem(NAVIGATION_ITEM_ALL_ALBUMS);
+        selectNavigationItem(selectedNavItem);
         showDefaultToolbar();
     }
 
@@ -605,6 +609,7 @@ public class MainActivity extends SharedMediaActivity implements
     }
 
     private void selectNavigationItem(@NavigationItem int navItem) {
+        selectedNavItem = navItem;
         navigationDrawerView.selectNavItem(navItem);
     }
 
